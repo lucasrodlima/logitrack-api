@@ -1,16 +1,10 @@
-import Fastify from "fastify";
-
-const app = Fastify({
-  logger: true,
-});
-
-app.get("/health", async () => {
-  return { status: "ok", timestamp: new Date().toISOString() };
-});
+import { app } from "./app";
+import { env } from "./env/index";
 
 const start = async () => {
   try {
-    await app.listen({ port: 3333, host: "0.0.0.0" });
+    await app.listen({ port: env.PORT, host: "0.0.0.0" });
+    console.log(`🚀 Server running on http://localhost:${env.PORT}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
