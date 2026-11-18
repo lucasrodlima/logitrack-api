@@ -5,11 +5,72 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  OPERATOR
+}
+
+enum DockStatus {
+  AVAILABLE
+  OCCUPIED
+  MAINTENANCE
+}
+
+enum ShipmentStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+  CANCELED
+}
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String @map("password_hash")
+  role         Role @default(OPERATOR)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  shipments Shipment[]
+
+  @@map("users")
+}
+
+model Dock {
+  id        String     @id @default(uuid())
+  code      String     @unique
+  status    DockStatus @default(AVAILABLE)
+  createdAt DateTime   @default(now()) @map("created_at")
+
+  shipments Shipment[]
+
+  @@map("docks")
+}
+
+model Shipment {
+  id           String         @id @default(uuid())
+  trackingCode String         @unique @map("tracking_code")
+  origin       String
+  destination  String
+  weightKg     Float          @map("weight_kg")
+  status       ShipmentStatus @default(PENDING)
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  operatorId String @map("operator_id")
+  operator   User   @relation(fields: [operatorId], references: [id])
+
+  dockId String? @map("dock_id")
+  dock   Dock?   @relation(fields: [dockId], references: [id])
+
+  @@map("shipments")
 }
