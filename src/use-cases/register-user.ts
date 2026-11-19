@@ -1,47 +1,49 @@
 import { Role, User } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import { Hasher } from "../cryptography/hasher";
 import { UsersRepository } from "../repositories/users-repository";
 import { UserAlreadyExistsError } from "./errors/user-already-exists-error";
 
 interface RegisterUserUseCaseRequest {
-  name: string;
-  email: string;
-  password: string;
-  role?: Role;
+    name: string;
+    email: string;
+    password: string;
+    role?: Role;
 }
 
 interface RegisterUserUseCaseResponse {
-  user: User;
+    user: User;
 }
 
 export class RegisterUserUseCase {
-  private usersRepository: UsersRepository;
+    private usersRepository: UsersRepository;
+    private hasher: Hasher;
 
-  constructor(usersRepository: UsersRepository) {
-    this.usersRepository = usersRepository;
-  }
-
-  async execute({
-    name,
-    email,
-    password,
-    role,
-  }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
-    const userWithSameEmail = await this.usersRepository.findByEmail(email);
-
-    if (userWithSameEmail) {
-      throw new UserAlreadyExistsError();
+    constructor(usersRepository: UsersRepository, hasher: Hasher) {
+        this.usersRepository = usersRepository;
+        this.hasher = hasher
     }
 
-    const passwordHash = await bcrypt.hash(password, 6);
+    async execute({
+        name,
+        email,
+        password,
+        role,
+    }: RegisterUserUseCaseRequest): Promise<RegisterUserUseCaseResponse> {
+        const userWithSameEmail = await this.usersRepository.findByEmail(email);
 
-    const user = await this.usersRepository.create({
-      name,
-      email,
-      passwordHash,
-      role,
-    });
+        if (userWithSameEmail) {
+            throw new UserAlreadyExistsError();
+        }
 
-    return { user };
-  }
+        const passwordHash = await this.hasher.hash(password);
+
+        const user = await this.usersRepository.create({
+            name,
+            email,
+            passwordHash,
+            role,
+        });
+
+        return { user };
+    }
 }
