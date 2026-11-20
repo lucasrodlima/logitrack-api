@@ -2,6 +2,7 @@ import Fastify from "fastify";
 import { env } from "./env/index";
 import { usersRoutes } from "./http/controllers/users/routes";
 import { ZodError } from "zod";
+import fastifyJwt from "@fastify/jwt";
 
 export const app = Fastify({
     logger: env.NODE_ENV === "dev",
@@ -9,6 +10,10 @@ export const app = Fastify({
 
 app.get("/health", async () => {
     return { status: "ok", timestamp: new Date().toISOString() };
+});
+
+app.register(fastifyJwt, {
+    secret: env.JWT_SECRET,
 });
 
 app.register(usersRoutes);
