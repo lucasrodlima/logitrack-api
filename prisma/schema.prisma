@@ -46,10 +46,11 @@ model User {
 }
 
 model Dock {
-  id        String     @id @default(uuid())
-  code      String     @unique
-  status    DockStatus @default(AVAILABLE)
-  createdAt DateTime   @default(now()) @map("created_at")
+  id          String     @id @default(uuid())
+  code        String     @unique
+  description String?
+  status      DockStatus @default(AVAILABLE)
+  createdAt   DateTime   @default(now()) @map("created_at")
 
   shipments Shipment[]
 

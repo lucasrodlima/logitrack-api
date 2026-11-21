@@ -1,13 +1,15 @@
 export type DockStatus = 'AVAILABLE' | 'OCCUPIED' | 'MAINTENANCE';
 
 export interface Dock {
-    id: String,
-    code: String,
+    id: string,
+    code: string,
+    description: string | null,
     status: DockStatus,
-    CreatedAt: Date,
+    createdAt: Date,
 }
 
 export interface DockCreateInput {
-    code: String;
+    code: string;
+    description?: string | null,
     status?: DockStatus;
 }
