@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { Role } from "../../entities/user";
 
 export function verifyUserRole(roleToVerify: Role) {
-    return (req: FastifyRequest, rep: FastifyReply) => {
+    return async (req: FastifyRequest, rep: FastifyReply) => {
         const role = req.user.role;
 
         if (role !== roleToVerify) {
