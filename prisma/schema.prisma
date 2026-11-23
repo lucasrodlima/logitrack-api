@@ -32,6 +32,14 @@ enum ShipmentStatus {
   CANCELED
 }
 
+enum CargoType {
+  GENERAL
+  REFRIGERATED
+  HAZARDOUS
+  FRAGILE
+  BULK
+}
+
 model User {
   id           String @id @default(uuid())
   name         String
@@ -60,6 +68,9 @@ model Dock {
 model Shipment {
   id           String         @id @default(uuid())
   trackingCode String         @unique @map("tracking_code")
+  cargoType    CargoType      @default(GENERAL) @map("cargo_type")
+  driverName   String         @map("driver_name")
+  licensePlate String         @map("license_plate")
   origin       String
   destination  String
   weightKg     Float          @map("weight_kg")
