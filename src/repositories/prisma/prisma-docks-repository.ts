@@ -1,5 +1,4 @@
-
-import { Dock, DockCreateInput } from "../../entities/dock";
+import { Dock, DockCreateInput, DockStatus } from "../../entities/dock";
 import { DocksRepository } from "../docks-repository";
 import { prisma } from "../../lib/prisma";
 
@@ -20,6 +19,13 @@ export class PrismaDocksRepository implements DocksRepository {
     async create(data: DockCreateInput): Promise<Dock> {
         return await prisma.dock.create({
             data,
+        });
+    }
+
+    async updateStatus(id: string, status: DockStatus): Promise<Dock> {
+        return await prisma.dock.update({
+            where: { id },
+            data: { status },
         });
     }
 }

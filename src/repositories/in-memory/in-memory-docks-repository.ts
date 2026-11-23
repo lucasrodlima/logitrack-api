@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
-import { Dock, DockCreateInput } from "../../entities/dock";
+import { Dock, DockCreateInput, DockStatus } from "../../entities/dock";
 import { DocksRepository } from "../docks-repository";
+import { DockNotFoundError } from "../../use-cases/errors/dock-not-found-error";
 
 export class InMemoryDocksRepository implements DocksRepository {
     public items: Dock[] = [];
@@ -29,5 +30,17 @@ export class InMemoryDocksRepository implements DocksRepository {
         this.items.push(dock);
 
         return dock;
+    }
+
+    async updateStatus(id: string, status: DockStatus): Promise<Dock> {
+        const dockIndex = this.items.findIndex((item) => item.id === id);
+
+        if (dockIndex === -1) {
+            throw new DockNotFoundError();
+        }
+
+        this.items[dockIndex].status = status;
+
+        return this.items[dockIndex];
     }
 }

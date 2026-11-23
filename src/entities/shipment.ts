@@ -13,14 +13,14 @@ export interface Shipment {
     weightKg: number;
     status: ShipmentStatus;
     createdAt: Date;
-    uptatedAt: Date;
+    updatedAt: Date;
     operatorId: string;
-    dockId: string;
+    dockId: string | null;
 }
 
 export interface ShipmentCreateInput {
     trackingCode: string;
-    cragoType: string;
+    cargoType: CargoType;
     driverName: string;
     licensePlate: string;
     origin: string;
