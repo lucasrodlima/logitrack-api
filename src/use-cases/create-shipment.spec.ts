@@ -3,6 +3,7 @@ import { InMemoryDocksRepository } from "../repositories/in-memory/in-memory-doc
 import { InMemoryShipmentsRepository } from "../repositories/in-memory/in-memory-shipments-repository"
 import { CreateShipmentUseCase } from "./create-shipment";
 import { InMemoryUsersRepository } from "../repositories/in-memory/in-memory-users-repository";
+import { ShipmentAlreadyExistsError } from "./errors/shipment-already-exists";
 
 let shipmentsRepo: InMemoryShipmentsRepository;
 let docksRepo: InMemoryDocksRepository;
@@ -44,4 +45,45 @@ describe("Create Shipment Use Case", () => {
         expect(shipment.status).toEqual("PENDING");
         expect(shipment.cargoType).toEqual("GENERAL");
     })
-})
+
+
+    it('should not be able to create shipment w/ existent code', async () => {
+        const user = await usersRepo.create({
+            email: "tzuzuri@gmail.com",
+            name: "Suzuna Tzuzuri",
+            passwordHash: "hashed-password"
+        })
+
+        const dock1 = await docksRepo.create({
+            code: 'DOCA-01',
+            description: 'Doca principal de carga seca',
+        });
+
+        const dock2 = await docksRepo.create({
+            code: 'DOCA-02',
+            description: 'Doca secundária de carga seca',
+        });
+
+        await sut.execute({
+            trackingCode: "000001",
+            driverName: "Vivi",
+            licensePlate: "ABC2026",
+            origin: "Belem",
+            destination: "Osaka",
+            weightKg: 200,
+            dockId: dock1.id,
+            operatorId: user.id,
+        });
+
+        await expect(sut.execute({
+            trackingCode: "000001",
+            driverName: "Pekora",
+            licensePlate: "ABH7696",
+            origin: "New York",
+            destination: "Dallas",
+            weightKg: 132,
+            dockId: dock2.id,
+            operatorId: user.id,
+        })).rejects.toBeInstanceOf(ShipmentAlreadyExistsError);
+    });
+});

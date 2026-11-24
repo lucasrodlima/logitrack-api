@@ -7,7 +7,7 @@ import { ShipmentAlreadyExistsError } from "./errors/shipment-already-exists";
 
 interface CreateShipmentUseCaseRequest {
     trackingCode: string;
-    cargoType: CargoType;
+    cargoType?: CargoType;
     driverName: string;
     licensePlate: string;
     origin: string;
@@ -64,7 +64,7 @@ export class CreateShipmentUseCase {
             origin,
             destination,
             weightKg,
-            status: 'PENDING',
+            status,
             dockId,
             operatorId,
         });

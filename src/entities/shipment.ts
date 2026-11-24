@@ -20,7 +20,7 @@ export interface Shipment {
 
 export interface ShipmentCreateInput {
     trackingCode: string;
-    cargoType: CargoType;
+    cargoType?: CargoType;
     driverName: string;
     licensePlate: string;
     origin: string;
