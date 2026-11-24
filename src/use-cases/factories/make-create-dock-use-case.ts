@@ -2,8 +2,8 @@ import { PrismaDocksRepository } from "../../repositories/prisma/prisma-docks-re
 import { CreateDockUseCase } from "../create-dock";
 
 export function makeCreateDockUseCase(): CreateDockUseCase {
-    const usersRepository = new PrismaDocksRepository;
-    const createDockUseCase = new CreateDockUseCase(usersRepository);
+    const docksRepo = new PrismaDocksRepository;
+    const createDockUseCase = new CreateDockUseCase(docksRepo);
 
     return createDockUseCase;
 }
