@@ -31,7 +31,12 @@ export class DispatchShipmentUseCase {
 
         shipment.status = 'IN_TRANSIT';
 
-        this.shipmentsRepo.save(shipment);
+        await this.shipmentsRepo.save(shipment);
+
+        if (shipment.dockId) {
+            await this.docksRepo.updateStatus(shipment.dockId, 'AVAILABLE');
+        }
+
         return { shipment };
     }
 }

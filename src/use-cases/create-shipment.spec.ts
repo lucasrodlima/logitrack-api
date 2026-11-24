@@ -4,6 +4,7 @@ import { InMemoryShipmentsRepository } from "../repositories/in-memory/in-memory
 import { CreateShipmentUseCase } from "./create-shipment";
 import { InMemoryUsersRepository } from "../repositories/in-memory/in-memory-users-repository";
 import { ShipmentAlreadyExistsError } from "./errors/shipment-already-exists";
+import { DockUnavailableError } from "./errors/dock-unavailable-error";
 
 let shipmentsRepo: InMemoryShipmentsRepository;
 let docksRepo: InMemoryDocksRepository;
@@ -44,6 +45,8 @@ describe("Create Shipment Use Case", () => {
         expect(shipment.id).toEqual(expect.any(String));
         expect(shipment.status).toEqual("PENDING");
         expect(shipment.cargoType).toEqual("GENERAL");
+
+        expect(dock.status).toEqual('OCCUPIED');
     })
 
 
@@ -86,4 +89,54 @@ describe("Create Shipment Use Case", () => {
             operatorId: user.id,
         })).rejects.toBeInstanceOf(ShipmentAlreadyExistsError);
     });
+
+    it('should not be able to create shipment w/ occupied dock', async () => {
+        const user = await usersRepo.create({
+            email: "tzuzuri@gmail.com",
+            name: "Suzuna Tzuzuri",
+            passwordHash: "hashed-password"
+        })
+
+        const dock = await docksRepo.create({
+            code: 'DOCA-01',
+            description: 'Doca principal de carga seca',
+            status: 'OCCUPIED',
+        });
+
+        await expect(sut.execute({
+            trackingCode: "000001",
+            driverName: "Vivi",
+            licensePlate: "ABC2026",
+            origin: "Belem",
+            destination: "Osaka",
+            weightKg: 200,
+            dockId: dock.id,
+            operatorId: user.id,
+        })).rejects.toBeInstanceOf(DockUnavailableError);
+    })
+
+    it('should not be able to create shipment w/ in-maintenance dock', async () => {
+        const user = await usersRepo.create({
+            email: "tzuzuri@gmail.com",
+            name: "Suzuna Tzuzuri",
+            passwordHash: "hashed-password"
+        })
+
+        const dock = await docksRepo.create({
+            code: 'DOCA-01',
+            description: 'Doca principal de carga seca',
+            status: 'MAINTENANCE',
+        });
+
+        await expect(sut.execute({
+            trackingCode: "000001",
+            driverName: "Vivi",
+            licensePlate: "ABC2026",
+            origin: "Belem",
+            destination: "Osaka",
+            weightKg: 200,
+            dockId: dock.id,
+            operatorId: user.id,
+        })).rejects.toBeInstanceOf(DockUnavailableError);
+    })
 });
