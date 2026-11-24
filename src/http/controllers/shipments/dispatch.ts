@@ -18,7 +18,7 @@ export async function dispatch(req: FastifyRequest, rep: FastifyReply) {
             shipmentId
         });
 
-        return shipment;
+        return rep.status(200).send({ shipment });
     } catch (err) {
 
         if (err instanceof ResourceNotFoundError) {
