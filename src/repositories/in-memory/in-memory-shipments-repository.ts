@@ -22,7 +22,7 @@ export class InMemoryShipmentsRepository implements ShipmentsRepository {
         const shipment: Shipment = {
             id: randomUUID(),
             trackingCode: data.trackingCode,
-            cargoType: data.cargoType,
+            cargoType: data.cargoType ?? "GENERAL",
             driverName: data.driverName,
             licensePlate: data.licensePlate,
             origin: data.origin,
