@@ -5,7 +5,7 @@ import { CreateShipmentUseCase } from "../create-shipment";
 export function makeCreateShipmentUseCase(): CreateShipmentUseCase {
     const shipmentsRepo = new PrismaShipmentsRepository();
     const docksRepo = new PrismaDocksRepository();
-    const createShipmentUse = new CreateShipmentUseCase(shipmentsRepo, docksRepo);
+    const createShipmentsUseCase = new CreateShipmentUseCase(shipmentsRepo, docksRepo);
 
-    return createShipmentUse;
+    return createShipmentsUseCase;
 }
