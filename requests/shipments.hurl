@@ -85,7 +85,7 @@ HTTP 200
 jsonpath "$.docks[?(@.id=='{{dock_id}}')].status" == "AVAILABLE"
 
 # 8. Lista cargas filtrando por status IN_TRANSIT e paginação
-GET http://localhost:3333/shipments?page=1&perPage=10&status=IN_TRANSIT
+GET http://localhost:3333/shipments?page=1&perPage=3&status=IN_TRANSIT
 Authorization: Bearer {{token}}
 HTTP 200
 [Asserts]

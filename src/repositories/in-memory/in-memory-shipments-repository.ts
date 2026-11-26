@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { Shipment, ShipmentCreateInput } from "../../entities/shipment";
-import { ShipmentsRepository } from "../shipments-repository";
+import { FetchShipmentsParams, ShipmentsRepository } from "../shipments-repository";
 import { DockNotFoundError } from "../../use-cases/errors/dock-not-found-error";
 
 export class InMemoryShipmentsRepository implements ShipmentsRepository {
@@ -14,8 +14,20 @@ export class InMemoryShipmentsRepository implements ShipmentsRepository {
         return await this.items.find((item) => item.trackingCode === trackingCode) ?? null;
     }
 
-    async findMany(): Promise<Shipment[]> {
-        return this.items;
+    async findMany({
+        page,
+        perPage,
+        status,
+        cargoType,
+    }: FetchShipmentsParams): Promise<Shipment[]> {
+        return this.items
+            .filter((item) => {
+                if (status && item.status !== status) return false;
+                if (cargoType && item.cargoType !== cargoType) return false;
+                return true
+            })
+            .toSorted((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+            .slice((page - 1) * perPage);
     }
 
     async create(data: ShipmentCreateInput): Promise<Shipment> {

@@ -1,9 +1,9 @@
 import { PrismaShipmentsRepository } from "../../repositories/prisma/prisma-shipments-repository";
-import { FetchParamsUseCase } from "../fetch-shipments";
+import { FetchShipmentsUseCase } from "../fetch-shipments";
 
-export function makeFetchShipmentsUseCase(): FetchParamsUseCase {
+export function makeFetchShipmentsUseCase(): FetchShipmentsUseCase {
     const shipmentsRepo = new PrismaShipmentsRepository();
-    const fetchShipmentsUseCase = new FetchParamsUseCase(shipmentsRepo);
+    const fetchShipmentsUseCase = new FetchShipmentsUseCase(shipmentsRepo);
 
     return fetchShipmentsUseCase;
 }

@@ -1,18 +1,18 @@
 import { CargoType, Shipment, ShipmentStatus } from "../entities/shipment";
 import { ShipmentsRepository } from "../repositories/shipments-repository";
 
-interface FetchParamsUseCaseRequest {
+interface FetchShipmentsUseCaseRequest {
     page: number,
     perPage: number,
     status?: ShipmentStatus,
     cargoType?: CargoType,
 }
 
-interface FetchParamsUseCaseResponse {
+interface FetchShipmentsUseCaseResponse {
     shipments: Shipment[],
 }
 
-export class FetchParamsUseCase {
+export class FetchShipmentsUseCase {
     constructor(
         private shipmentsRepo: ShipmentsRepository
     ) { }
@@ -22,7 +22,7 @@ export class FetchParamsUseCase {
         perPage,
         status,
         cargoType,
-    }: FetchParamsUseCaseRequest): Promise<FetchParamsUseCaseResponse> {
+    }: FetchShipmentsUseCaseRequest): Promise<FetchShipmentsUseCaseResponse> {
         const shipments = await this.shipmentsRepo.findMany({
             page,
             perPage,
