@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { currencyCode, z } from "zod";
+import { z } from "zod";
 import { makeCreateShipmentUseCase } from "../../../use-cases/factories/make-create-shipment-use-case";
 import { ResourceNotFoundError } from "../../../use-cases/errors/resource-not-found-error";
 import { DockUnavailableError } from "../../../use-cases/errors/dock-unavailable-error";

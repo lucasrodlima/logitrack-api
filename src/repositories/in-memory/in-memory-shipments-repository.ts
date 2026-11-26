@@ -27,7 +27,7 @@ export class InMemoryShipmentsRepository implements ShipmentsRepository {
                 return true
             })
             .toSorted((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            .slice((page - 1) * perPage);
+            .slice((page - 1) * perPage, page * perPage);
     }
 
     async create(data: ShipmentCreateInput): Promise<Shipment> {
