@@ -1,6 +1,6 @@
 import { Shipment, ShipmentCreateInput } from "../../entities/shipment";
 import { prisma } from "../../lib/prisma";
-import { ShipmentsRepository } from "../shipments-repository";
+import { FetchShipmentsParams, ShipmentsRepository } from "../shipments-repository";
 
 export class PrismaShipmentsRepository implements ShipmentsRepository {
 
@@ -12,8 +12,18 @@ export class PrismaShipmentsRepository implements ShipmentsRepository {
         return await prisma.shipment.findUnique({ where: { trackingCode } });
     }
 
-    async findMany(): Promise<Shipment[]> {
-        return await prisma.shipment.findMany();
+    async findMany({ page, perPage, status, cargoType }: FetchShipmentsParams): Promise<Shipment[]> {
+        return await prisma.shipment.findMany({
+            where: {
+                ...(status && { status }),
+                ...(cargoType && { cargoType }),
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+            take: perPage,
+            skip: (page - 1) * perPage,
+        });
     }
 
     async create(data: ShipmentCreateInput): Promise<Shipment> {
