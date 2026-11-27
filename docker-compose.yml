@@ -1,13 +1,13 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: logitrack-pg
+    container_name: armazen-pg
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: docker
       POSTGRES_PASSWORD: dockerpassword
-      POSTGRES_DB: logitrack
+      POSTGRES_DB: armazen
     volumes:
       - pgdata:/var/lib/postgresql/data
 

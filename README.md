@@ -1,4 +1,4 @@
-# LogiTrack API
+# Armazen API
 
 ![Status](https://img.shields.io/badge/status-work%20in%20progress-yellow)
 ![TypeScript](https://img.shields.io/badge/TypeScript-7.0-blue)
@@ -39,8 +39,8 @@ RESTful API for logistics yard, dock allocation, and shipment dispatch managemen
 
 ### 1. Clone and install dependencies
 ```bash
-git clone https://github.com/lucasrodlima/logitrack-api.git
-cd logitrack-api
+git clone https://github.com/lucasrodlima/armazen-api.git
+cd armazen-api
 npm install
 ```
 
